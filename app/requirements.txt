@@ -1,0 +1,4 @@
+selenium
+python-dotenv
+requests
+psycopg[binary]
