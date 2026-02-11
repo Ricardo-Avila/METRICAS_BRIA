@@ -1,6 +1,8 @@
 import subprocess
 import sys
 import os
+from datetime import datetime
+import calendar
 
 BASE_DIR = os.path.dirname(os.path.abspath(__file__))
 
@@ -35,8 +37,20 @@ def main():
     # 3 Subir a Postgres
     ejecutar_script("csv_a_postgres.py")
 
-    # Aqui luego agregas:
-    # ejecutar_script("enviar_correo.py")
+    # 4 Generar Reporte (solo el ultimo dia del mes)
+    today = datetime.now().date()
+    last_day = calendar.monthrange(today.year, today.month)[1]
+    if today.day == last_day:
+        ejecutar_script("generar_reporte_operaciones.py")
+    else:
+        print("INFO: generar_reporte_operaciones.py se omite (no es el ultimo dia del mes).")
+
+    # 5 Enviar correo (solo el ultimo dia del mes)
+    if today.day == last_day:
+        ejecutar_script("enviar_correo.py")
+    else:
+        print("INFO: enviar_correo.py se omite (no es el ultimo dia del mes).")
+
     # ejecutar_script("limpieza.py")
 
     print("PROCESO COMPLETO FINALIZADO CON EXITO")
