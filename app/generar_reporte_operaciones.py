@@ -68,6 +68,9 @@ HTML_TEMPLATE = """<!DOCTYPE html>
     border-bottom: 1px solid #ddd;
     text-align: center;
   }}
+  .emoji-col {{
+    width: 56px;
+  }}
   tr:last-child td {{ border-bottom: none; }}
   .emoji {{
     font-size: 22px;
@@ -78,7 +81,7 @@ HTML_TEMPLATE = """<!DOCTYPE html>
   }}
   .btn {{
     border: none;
-    background: #0d6efd;
+    background: #198754;
     color: white;
     padding: 8px 14px;
     border-radius: 8px;
@@ -87,14 +90,14 @@ HTML_TEMPLATE = """<!DOCTYPE html>
     margin: 0 6px;
   }}
   .btn--alt {{
-    background: #6c757d;
+    background: #fd7e14;
   }}
 </style>
 
 </head>
 <body>
 
-<h2 style="text-align:center;">🏆 Ranking de Ext – {titulo_metrica} - {mes_nombre} {anio}</h2>
+<h2 style="text-align:center;">🏆 Ranking de Llamadas - {mes_nombre} {anio}</h2>
 
 <div class="controls">
   <button class="btn" id="sortEntrantes">Ordenar por Entrantes</button>
@@ -106,11 +109,11 @@ HTML_TEMPLATE = """<!DOCTYPE html>
   <tr>
     <th>Lugar</th>
     <th>Extensión</th>
+    <th class="emoji-col"></th>
     <th>Nombre</th>
     <th>Área</th>
     <th>Entrantes</th>
     <th>Salientes</th>
-    <th></th>
   </tr>
 
 {filas}
@@ -157,11 +160,11 @@ HTML_TEMPLATE = """<!DOCTYPE html>
         tr.innerHTML = `
           <td>${{place}}</td>
           <td>${{row.extension}}</td>
+          <td class="emoji">${{emoji}}</td>
           <td>${{row.nombre}}</td>
           <td>${{row.departamento}}</td>
           <td>${{row.entrantes}}</td>
           <td>${{row.salientes}}</td>
-          <td class="emoji">${{emoji}}</td>
         `;
         tbody.appendChild(tr);
       }});

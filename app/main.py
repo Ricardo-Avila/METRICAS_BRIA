@@ -38,6 +38,7 @@ def main():
     ejecutar_script("csv_a_postgres.py")
 
     # 4 Generar Reporte (solo el ultimo dia del mes)
+    ejecutar_script("generar_reporte_operaciones.py")
     today = datetime.now().date()
     last_day = calendar.monthrange(today.year, today.month)[1]
     if today.day == last_day:

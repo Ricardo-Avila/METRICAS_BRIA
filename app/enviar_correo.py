@@ -2,6 +2,7 @@ import os
 import smtplib
 from datetime import datetime
 from email.message import EmailMessage
+import re
 from dotenv import load_dotenv
 
 BASE_DIR = os.path.dirname(os.path.abspath(__file__))
@@ -26,6 +27,12 @@ def build_subject(now):
     mes_nombre = MESES.get(now.month, str(now.month))
     return f"Metricas Bria {mes_nombre} {now.year} Area Operaciones"
 
+def parse_addresses(raw):
+    if not raw:
+        return []
+    parts = re.split(r"[;,]", raw)
+    return [p.strip() for p in parts if p and p.strip()]
+
 
 def main():
     load_dotenv()
@@ -40,9 +47,10 @@ def main():
         smtp_ssl = smtp_ssl_env.strip().lower() in {"1", "true", "yes", "y"}
     smtp_tls = os.getenv("SMTP_TLS", "true").strip().lower() in {"1", "true", "yes", "y"}
     mail_from = os.getenv("MAIL_FROM", smtp_user)
-    mail_to = os.getenv("MAIL_TO", "ravila@b2bservicios.com")
-    mail_to_cc = os.getenv("MAIL_TO_CC")
-    mail_to_error = os.getenv("MAIL_TO_ERROR", "error@b2bservicios.com")
+    mail_to = os.getenv("MAIL_TO")
+    mail_to_cc = os.getenv("MAIL_YO_CC") or os.getenv("MAIL_TO_CC")
+    mail_to_error = os.getenv("MAIL_TO_ERROR")
+    log_path = os.getenv("METRICAS_LOG_PATH", "/var/log/metricas.log")
 
     if not all([smtp_host, smtp_user, smtp_pass, mail_from]):
         raise RuntimeError("Faltan variables de entorno SMTP (SMTP_HOST, SMTP_USER, SMTP_PASS, MAIL_FROM opcional)")
@@ -53,30 +61,49 @@ def main():
     report_filename = f"Reporte_Operaciones_{now.year}_{now.month:02d}.html"
     report_path = os.path.abspath(os.path.join(BASE_DIR, "..", "reports", report_filename))
     report_exists = os.path.exists(report_path)
+    attach_error_log = False
+    error_detail = ""
 
     msg = EmailMessage()
     msg["From"] = mail_from
     if report_exists:
-        msg["To"] = mail_to
-        if mail_to_cc:
-            msg["Cc"] = mail_to_cc
+        msg["To"] = ", ".join(parse_addresses(mail_to)) or mail_to
+        cc_list = parse_addresses(mail_to_cc)
+        if cc_list:
+            msg["Cc"] = ", ".join(cc_list)
         msg["Subject"] = subject
         msg.set_content("Ricardo Avila Laguna | B2B Negocios | Correo Automatizado")
-        with open(report_path, "rb") as f:
-            msg.add_attachment(
-                f.read(),
-                maintype="text",
-                subtype="html",
-                filename=report_filename,
-            )
-    else:
-        msg["To"] = mail_to_error
+        try:
+            with open(report_path, "rb") as f:
+                msg.add_attachment(
+                    f.read(),
+                    maintype="text",
+                    subtype="html",
+                    filename=report_filename,
+                )
+        except Exception as exc:
+            report_exists = False
+            attach_error_log = True
+            error_detail = f"No se pudo adjuntar el reporte: {exc}"
+
+    if not report_exists:
+        msg["To"] = ", ".join(parse_addresses(mail_to_error)) or mail_to_error
         msg["Subject"] = f"Fallo reporte Operaciones {now.month:02d}-{now.year}"
         msg.set_content(
             "No se encontro el reporte mensual de Operaciones.\n"
             f"Se esperaba el archivo: {report_path}\n"
-            "Ricardo Avila Laguna | B2B Negocios | Correo Automatizado"
+            + (f"{error_detail}\n" if error_detail else "")
+            + "Ricardo Avila Laguna | B2B Negocios | Correo Automatizado"
         )
+        attach_error_log = True
+        if attach_error_log and os.path.exists(log_path):
+            with open(log_path, "rb") as f:
+                msg.add_attachment(
+                    f.read(),
+                    maintype="text",
+                    subtype="plain",
+                    filename=os.path.basename(log_path),
+                )
 
     if smtp_ssl:
         with smtplib.SMTP_SSL(smtp_host, smtp_port) as server:
