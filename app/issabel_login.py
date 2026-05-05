@@ -5,6 +5,7 @@ from selenium.webdriver.common.by import By
 from selenium.webdriver.support.ui import WebDriverWait
 from selenium.webdriver.support import expected_conditions as EC
 from selenium.webdriver.chrome.options import Options
+from selenium.webdriver.chrome.service import Service
 
 # ==========================
 # VARIABLES DE ENTORNO
@@ -35,7 +36,16 @@ prefs = {
 }
 options.add_experimental_option("prefs", prefs)
 
-driver = webdriver.Chrome(options=options)
+CHROMEDRIVER_PATH = "/usr/local/bin/chromedriver"
+
+if os.path.exists(CHROMEDRIVER_PATH):
+    print(f"Usando ChromeDriver instalado en {CHROMEDRIVER_PATH}")
+    service = Service(CHROMEDRIVER_PATH)
+    driver = webdriver.Chrome(service=service, options=options)
+else:
+    print("ChromeDriver no encontrado; Selenium Manager intentara resolverlo automaticamente")
+    driver = webdriver.Chrome(options=options)
+
 wait = WebDriverWait(driver, 20)
 
 try:

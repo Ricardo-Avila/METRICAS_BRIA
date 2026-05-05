@@ -40,6 +40,17 @@ RUN wget -q -O - https://dl.google.com/linux/linux_signing_key.pub \
  && apt-get install -y google-chrome-stable \
  && rm -rf /var/lib/apt/lists/*
 
+# Instalar ChromeDriver compatible con la version instalada de Google Chrome
+RUN CHROME_VERSION=$(google-chrome --product-version) \
+ && CHROME_BUILD=$(echo "$CHROME_VERSION" | cut -d. -f1-3) \
+ && DRIVER_VERSION=$(wget -qO- "https://googlechromelabs.github.io/chrome-for-testing/LATEST_RELEASE_${CHROME_BUILD}") \
+ && wget -q -O /tmp/chromedriver.zip "https://storage.googleapis.com/chrome-for-testing-public/${DRIVER_VERSION}/linux64/chromedriver-linux64.zip" \
+ && unzip /tmp/chromedriver.zip -d /tmp/ \
+ && mv /tmp/chromedriver-linux64/chromedriver /usr/local/bin/chromedriver \
+ && chmod +x /usr/local/bin/chromedriver \
+ && chromedriver --version \
+ && rm -rf /tmp/chromedriver.zip /tmp/chromedriver-linux64
+
 WORKDIR /app
 
 # Instalar dependencias Python
