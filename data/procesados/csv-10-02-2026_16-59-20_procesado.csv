@@ -1,0 +1,3 @@
+Uuid;Calldate;Duration;Ringing;Attended;Direction;Callerid;Destination;SrcUser;SrcExtension;DstUser;DstExtension;Path;Linkedid;Astcallid
+3e239380-a1d9-42d6-9ec1-fe0d97e932eb;2026-02-10 16:57:13;70;8;1;outgoing;5544404475;4422117100;1647;154; ; ; ;mt-1770764233.1115081;[C-000428aa]
+58e530b3-8556-418d-b33c-f728ec3109fa;2026-02-10 16:56:31;121;9;1;outgoing;5544404475;8114777475;1649;156; ; ; ;mt-1770764191.1115064;[C-000428a6]

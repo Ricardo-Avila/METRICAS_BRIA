@@ -29,30 +29,31 @@ def main():
     print("INICIANDO PIPELINE METRICAS_BRIA\n")
 
     # 1 Login + descarga CSV (selenium)
-    ejecutar_script("issabel_login.py")
+    #ejecutar_script("issabel_login.py")
 
     #2 Procesar CSV
-    ejecutar_script("procesar.py")
+    #ejecutar_script("procesar.py")
 
     # 3 Subir a Postgres
-    ejecutar_script("csv_a_postgres.py")
+    #ejecutar_script("csv_a_postgres.py")
 
     # 4 Generar Reporte (solo el ultimo dia del mes)
-    ejecutar_script("generar_reporte_operaciones.py")
-    today = datetime.now().date()
-    last_day = calendar.monthrange(today.year, today.month)[1]
-    if today.day == last_day:
-        ejecutar_script("generar_reporte_operaciones.py")
-    else:
-        print("INFO: generar_reporte_operaciones.py se omite (no es el ultimo dia del mes).")
+    #ejecutar_script("generar_reporte_operaciones.py")
+    #today = datetime.now().date()
+    #last_day = calendar.monthrange(today.year, today.month)[1]
+    #if today.day == last_day:
+    #    ejecutar_script("generar_reporte_operaciones.py")
+    #else:
+    #    print("INFO: generar_reporte_operaciones.py se omite (no es el ultimo dia del mes).")
 
     # 5 Enviar correo (solo el ultimo dia del mes)
-    if today.day == last_day:
-        ejecutar_script("enviar_correo.py")
-    else:
-        print("INFO: enviar_correo.py se omite (no es el ultimo dia del mes).")
+    #ejecutar_script("enviar_correo.py")
+    #if today.day == last_day:
+    #    ejecutar_script("enviar_correo.py")
+    #else:
+    #    print("INFO: enviar_correo.py se omite (no es el ultimo dia del mes).")
 
-    # ejecutar_script("limpieza.py")
+    #ejecutar_script("limpieza.py")
 
     print("PROCESO COMPLETO FINALIZADO CON EXITO")
 

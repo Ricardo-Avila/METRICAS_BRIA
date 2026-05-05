@@ -1,0 +1,2 @@
+Uuid;Calldate;Duration;Ringing;Attended;Direction;Callerid;Destination;SrcUser;SrcExtension;DstUser;DstExtension;Path;Linkedid;Astcallid
+38cb0764-7f98-4afa-b001-86dcb6b579f5;2026-02-18 14:11:54;0;0; ;incoming;+527776890406;5544404475; ; ; ;1001;1001;mt-1771445514.1259414;[C-0004a233]

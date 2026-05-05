@@ -84,6 +84,7 @@ INSERT INTO usuario (extension, nombre, departamento, nota) VALUES
 (116, 'Victor H Penaloza', 'Operaciones', NULL),
 (117, 'Daniel Ocegueda', 'Comercial', NULL),
 (118, 'Mayra Martinez', 'Administracion', NULL),
+(119, 'Dalia Jimenez', 'Desarrollo, NULL),
 (121, 'Mireya Hernandez', 'Administracion', NULL),
 (122, 'Pamela Mejia', 'Cuentas', NULL),
 (124, 'Monica Cervantes', 'Cuentas', NULL),
